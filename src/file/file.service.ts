@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFileDto } from './dto/create-file.dto';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { console } from 'inspector';
 
 @Injectable()
 export class FileService {
