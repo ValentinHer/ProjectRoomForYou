@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAppointmentAvailableDto } from './dto/create-appointment-available.dto';
 import { UpdateAppointmentAvailableDto } from './dto/update-appointment-available.dto';
@@ -15,12 +15,11 @@ export class AppointmentAvailableService {
     const {ownerId, ...otherData} = createAppointmentAvailableDto;
 
     const ownerFound = await this.ownerService.findOne(ownerId);
-    const day = otherData.day.toUpperCase();
 
     const dayFound = await this.appointmentAvailableRepository.findOne({
       where:{
         owner: {id: ownerId},
-        day
+        day: otherData.day
       }
     })
 
@@ -55,8 +54,11 @@ export class AppointmentAvailableService {
   async remove(id: string) {
     const appointmentAvailableFound = await this.findOne(id);
 
-    const appointmentAvailableDeleted = await this.appointmentAvailableRepository.delete(id);
-
-    return {message: `appointment Available with id: ${id} deleted`};
+    try {
+      const appointmentAvailableDeleted = await this.appointmentAvailableRepository.delete(id);
+      throw new HttpException(`Appointment Available with id: ${id} deleted`, HttpStatus.OK);
+    } catch (error) {
+      throw new HttpException(`error: ${error}`, HttpStatus.CONFLICT);
+    }
   }
 }

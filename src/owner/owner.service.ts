@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Owner } from './entities/owner.entity';
 import { Repository } from 'typeorm';
@@ -10,7 +10,7 @@ export class OwnerService {
   constructor(@InjectRepository(Owner) private ownerRepository: Repository<Owner>, private userService: UserService){}
 
   async create(idDto: IdDto) {
-    const user = await this.userService.findOne(idDto.id);
+    const user = await this.userService.findOne(idDto.userId);
 
     return await this.ownerRepository.save({user});
   }
@@ -35,8 +35,11 @@ export class OwnerService {
   async remove(id: string) {
     const ownerFound = await this.findOne(id);
 
-    const ownerDeleted = await this.ownerRepository.delete(id);
-
-    return {message: `Owner with id: ${id} deleted`};
+    try {
+      const ownerDeleted = await this.ownerRepository.delete(id);
+      throw new HttpException(`Owner with id ${id} deleted`, HttpStatus.OK);
+    } catch (error) {
+      throw new HttpException(`error: ${error}`, HttpStatus.CONFLICT);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,22 +9,50 @@ import { Role } from '../role/entities/role.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   constructor(@InjectRepository(User) private userRepository: Repository<User>,
               @InjectRepository(Role) private roleRepository: Repository<Role>){}
+
+  async onModuleInit() {
+    const adminUser = {
+      "firstname": "RoomForYouAdmin",
+      "lastname": "admin",
+      "email": "mxvalen13@gmail.com",
+      "password": "RoomForYouAdmin",
+      "numberPhone": "7711823621",
+    }
+
+    const userAdmin = await this.userRepository.findOne({
+      where: {
+        email: adminUser.email
+      }
+    });
+
+    if(userAdmin) return;
+
+    adminUser.password = await this.hashPassword(adminUser.password);
+
+    const roleFound = await this.roleRepository.findOne({
+      where: {
+        name: "admin"
+      }
+    })
+
+    await this.userRepository.save({role: roleFound, ...adminUser});
+  }
 
   async create(user: CreateUserDto) {
     const {role, password, ...otherData} = user;
 
-    const roleFind = await this.roleRepository.findOne({
+    const roleFound = await this.roleRepository.findOne({
       where: {name: role}
     })
 
-    if(!roleFind) return new HttpException('Role not Found', HttpStatus.NOT_FOUND);
+    if(!roleFound) throw new NotFoundException('Role not Found');
 
-    const passwordHash = await this.hashPassword(password)
+    const passwordHash = await this.hashPassword(user.password)
 
-    const newUser = {...otherData, role: roleFind, password: passwordHash}
+    const newUser = {...otherData, role: roleFound, password: passwordHash}
     
     return await this.userRepository.save(newUser);
   }
@@ -82,9 +110,9 @@ export class UserService {
 
     try {
       const userDeleted = await this.userRepository.delete(id);
-      return {message: `User with id: ${id} deleted`}
+      throw new HttpException(`User with id ${id} deleted`, HttpStatus.OK);
     } catch (e) {
-      throw new HttpException(`You must first delete the table relationed ${e}`, HttpStatus.NOT_ACCEPTABLE)
+      throw new HttpException(`error: ${e}`, HttpStatus.CONFLICT)
     }
   }
 

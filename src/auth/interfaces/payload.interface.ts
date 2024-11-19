@@ -1,3 +1,5 @@
 export interface IPayload {
-    sub: string,
+    sub: string;
+    iat: number;
+    exp: number;
 }

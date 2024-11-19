@@ -11,8 +11,7 @@ export class AuthController {
   async signIn(@Body() signInDto: SignInDto, @Res() res: Response){
     const {access_token, rol} = await this.authService.singIn(signInDto);
 
-    // res.cookie('token', access_token, {httpOnly: true});
-    res.json(access_token),
+    res.cookie('token', access_token, {httpOnly: true});
     res.status(200).json({userRol: rol});
   }
 

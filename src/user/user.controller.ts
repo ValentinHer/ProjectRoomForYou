@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { EmailDuplicateGuard } from './guards/email-duplicate.guard';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -16,6 +17,7 @@ export class UserController {
   }
 
   @Get()
+  // @UseGuards(JwtAuthGuard)
   async findAll(@Query() query: PaginationDto) {
     return await this.userService.findAll(query);
   }

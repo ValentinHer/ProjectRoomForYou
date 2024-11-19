@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { FileService } from './file.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { console } from 'inspector';
 
 @Controller('files')
 export class FileController {
@@ -14,8 +13,8 @@ export class FileController {
     await this.fileService.create(files, createFileDto);
   }
 
-  @Get()
-  findAll() {
-    return this.fileService.findAll();
+  @Get(':id')
+  async findAll(@Param('id') id: string) {
+    return await this.fileService.findAll(id);
   }
 }

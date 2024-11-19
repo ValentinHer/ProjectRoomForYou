@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { SignInDto } from './dto/sign-in.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -12,11 +12,16 @@ export class AuthService {
 
   async singIn(user: SignInDto){
     const userFound =  await this.userRepository.findOne({
-      where: {email: user.email}
+      where: {email: user.email}, 
+      relations: {
+        role: true
+      }
     });
 
+    if(!userFound) throw new UnauthorizedException("Check Your Email/Password");
+
     const passwordMatch = await bcrypt.compare(user.password, userFound.password);
-    if(!userFound || !passwordMatch) throw new UnauthorizedException("Check Your Email/Password");
+    if(!passwordMatch) throw new UnauthorizedException("Check Your Email/Password");
 
     const payload = { sub: userFound.id};
     

@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export enum WeekDays {
-    LUNES =  "LUNES",
-    MARTES = "MARTES",
-    MIERCOLES = "MIERCOLES",
-    JUEVES = "JUEVES",
-    VIERNES = "VIERNES",
-    SABADO = "SABADO",
-    DOMINGO = "DOMINGO"
+    lunes =  "lunes",
+    martes = "martes",
+    miercoles = "miercoles",
+    jueves = "jueves",
+    viernes = "viernes",
+    sabado = "sabado",
+    domingo = "domingo"
 }
 
 export class CreateAppointmentAvailableDto {
@@ -18,7 +18,8 @@ export class CreateAppointmentAvailableDto {
 
     @IsString()
     @IsNotEmpty()
-    day: WeekDays;
+    @IsEnum(WeekDays)
+    day: string;
 
     @IsString()
     @IsNotEmpty()

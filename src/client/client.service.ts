@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IdDto } from '../common/dto/id.dto';
 import { Client } from './entities/client.entity';
@@ -10,7 +10,7 @@ export class ClientService {
   constructor(@InjectRepository(Client) private clientRepository: Repository<Client>, private userService: UserService){}
 
   async create(idDto: IdDto) {
-    const userFound = await this.userService.findOne(idDto.id);  
+    const userFound = await this.userService.findOne(idDto.userId);  
 
     return await this.clientRepository.save({user: userFound});
   }
@@ -35,8 +35,11 @@ export class ClientService {
   async remove(id: string) {
     const clientFound = await this.findOne(id);
 
-    const clientDeleted = await this.clientRepository.delete(id);
-
-    return {message: `Client with id: ${id} deleted`};
+    try {
+      const clientDeleted = await this.clientRepository.delete(id);
+      throw new HttpException(`Client with id: ${id} deleted`, HttpStatus.OK);      
+    } catch (error) {
+      throw new HttpException(`error: ${error}`, HttpStatus.CONFLICT);
+    }
   }
 }

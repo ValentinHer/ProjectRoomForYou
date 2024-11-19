@@ -1,3 +1,4 @@
+import { File } from "../../file/entities/file.entity";
 import { Appointment } from "../../appointment/entities/appointment.entity";
 import { Owner } from "../../owner/entities/owner.entity";
 import { Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, ManyToOne, OneToMany, Entity } from "typeorm";
@@ -36,6 +37,9 @@ export class Property {
 
     @OneToMany(() => Appointment, appointment => appointment.property)
     appointments: Appointment[];
+
+    @OneToMany(() => File, file => file.property)
+    files: File[];
 
     @CreateDateColumn({name: 'created_at'})
     createdAt: Date;

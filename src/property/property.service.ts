@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +14,12 @@ export class PropertyService {
     const{ownerId, ...otherData} = createPropertyDto;
 
     const owner = await this.ownerService.findOne(ownerId);
+
+    const propertyFound = await this.propertyRepository.findOne({
+      where: {title: createPropertyDto.title}
+    })
+
+    if(propertyFound) throw new ConflictException(`Property with title ${createPropertyDto.title} already exist`);
 
     return await this.propertyRepository.save(otherData);
   }
@@ -43,8 +49,11 @@ export class PropertyService {
   async remove(id: string) {
     const propertyFound = await this.findOne(id);
 
-    const propertyDeleted = await this.propertyRepository.delete(id);
-
-    return {message: `Property with ${id} deleted`};
+    try {
+      const propertyDeleted = await this.propertyRepository.delete(id);
+      throw new HttpException(`Property with ${id} deleted`, HttpStatus.OK)
+    } catch (error) {
+      throw new ConflictException(`error: ${error}`);
+    }
   }
 }

@@ -1,20 +1,20 @@
-import { IsInt, IsNotEmpty, IsString, IsUUID, Min } from "class-validator";
+import { IsEnum, IsInt, IsNotEmpty, IsString, IsUUID, Min } from "class-validator";
 
 export enum PropertyType {
-    DEPARTAMENTO = "DEPARTAMENTO",
-    CASA = "CASA",
-    CUARTO = "CUARTO"
+    departamento = "departamento",
+    casa = "casa",
+    cuarto = "cuarto"
 }
 
 export enum PropertyState {
-    DISPONIBLE = "DISPONIBLE",
-    RENTADO = "RENTADO",
-    VENDIDO = "VENDIDO"
+    disponible = "disponible",
+    rentado = "rentado",
+    vendido = "vendido"
 }
 
 export enum TransaccionType {
-    RENTA = "RENTA",
-    VENTA = "VENTA"
+    renta = "renta",
+    venta = "venta"
 }
 
 export class CreatePropertyDto {
@@ -30,7 +30,8 @@ export class CreatePropertyDto {
 
     @IsString()
     @IsNotEmpty()
-    type: PropertyType;
+    @IsEnum(PropertyType)
+    type: string;
 
     @IsString()
     @IsNotEmpty()
@@ -38,7 +39,8 @@ export class CreatePropertyDto {
 
     @IsString()
     @IsNotEmpty()
-    transactionType: TransaccionType;
+    @IsEnum(TransaccionType)
+    transactionType: string;
 
     @IsInt()
     @Min(1)
@@ -54,5 +56,6 @@ export class CreatePropertyDto {
 
     @IsString()
     @IsNotEmpty()
-    state: PropertyState;
+    @IsEnum(PropertyState)
+    state: string;
 }
