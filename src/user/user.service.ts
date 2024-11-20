@@ -39,6 +39,8 @@ export class UserService implements OnModuleInit {
       }
     })
 
+    if(!roleFound) return
+
     await this.userRepository.save({role: roleFound, ...adminUser});
   }
 

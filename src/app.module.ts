@@ -28,8 +28,8 @@ import { FileModule } from './file/file.module';
     // migrationsTableName: "RoomForYou_migration_table",
     
   }),
-    UserModule,
     RoleModule,
+    UserModule,
     OwnerModule, 
     ClientModule, 
     AuthModule,
