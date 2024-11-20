@@ -20,6 +20,7 @@ export class UserService implements OnModuleInit {
       "email": "mxvalen13@gmail.com",
       "password": "RoomForYouAdmin",
       "numberPhone": "7711823621",
+      "gender": "masculino"
     }
 
     const userAdmin = await this.userRepository.findOne({

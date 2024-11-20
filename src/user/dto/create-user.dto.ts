@@ -6,6 +6,11 @@ export enum UserRole {
     propietario = "propietario"
 }
 
+export enum UserGender {
+    masculino = "masculino",
+    femenino = "femenino"
+}
+
 export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
@@ -31,6 +36,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
+    @IsEnum(UserGender)
     gender: string;
 
     @IsString()
