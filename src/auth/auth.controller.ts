@@ -9,10 +9,10 @@ export class AuthController {
 
   @Post('login')
   async signIn(@Body() signInDto: SignInDto, @Res() res: Response){
-    const {access_token, rol} = await this.authService.singIn(signInDto);
+    const {access_token, ...otherData} = await this.authService.singIn(signInDto);
 
     res.cookie('token', access_token, {httpOnly: true});
-    res.status(200).json({userRol: rol});
+    res.status(200).json({data: otherData});
   }
 
 }

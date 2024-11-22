@@ -1,4 +1,4 @@
-import { CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Property } from "../../property/entities/property.entity";
 import { AppointmentAvailable } from "../../appointment-available/entities/appointment-available.entity";
 import { User } from "../../user/entities/user.entity";
@@ -9,6 +9,7 @@ export class Owner {
     id: string;
 
     @OneToOne(() => User)
+    @JoinColumn()
     user: User
 
     @OneToMany(() => Property, property => property.owner)
