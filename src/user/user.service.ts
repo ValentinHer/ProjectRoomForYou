@@ -29,7 +29,7 @@ export class UserService implements OnModuleInit {
       }
     });
 
-    if(!userAdmin) return;
+    if(userAdmin) return;
 
     adminUser.password = await this.hashPassword(adminUser.password);
 
@@ -39,7 +39,7 @@ export class UserService implements OnModuleInit {
       }
     })
 
-    if(!roleFound) return
+    if(!roleFound) return;
 
     await this.userRepository.save({role: roleFound, ...adminUser});
   }
