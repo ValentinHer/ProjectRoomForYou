@@ -29,7 +29,7 @@ export class UserService implements OnModuleInit {
       }
     });
 
-    if(userAdmin) return;
+    if(!userAdmin) return;
 
     adminUser.password = await this.hashPassword(adminUser.password);
 
