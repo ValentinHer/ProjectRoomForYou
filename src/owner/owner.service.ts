@@ -32,6 +32,17 @@ export class OwnerService {
     return ownerFound;
   }
 
+  async findOneByUserId(id: string) {
+    const ownerFound =  await this.ownerRepository.findOne({
+      where: {user: {id}},
+      relations: {user: true}
+    });
+
+    if(!ownerFound) throw new NotFoundException("Owner Not Found");
+
+    return ownerFound;
+  }
+
   async remove(id: string) {
     const ownerFound = await this.findOne(id);
 

@@ -27,7 +27,7 @@ export class AuthService {
     
     const access_token = this.jwtService.sign(payload);
 
-    return {access_token: access_token, rol: userFound.role.name, username: `${userFound.firstname} ${userFound.lastname}`};
+    return {access_token: access_token, userId: userFound.id, rol: userFound.role.name,};
   }
 
 }

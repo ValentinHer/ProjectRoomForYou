@@ -10,7 +10,7 @@ export class Owner {
 
     @OneToOne(() => User)
     @JoinColumn()
-    user: User
+    user: User;
 
     @OneToMany(() => Property, property => property.owner)
     properties: Property[];
