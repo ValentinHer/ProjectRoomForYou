@@ -82,6 +82,9 @@ export class UserService implements OnModuleInit {
     const userFound = await this.userRepository.findOne({
       where: {
         id
+      },
+      relations: {
+        role: true
       }
     });
 

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Property } from './entities/property.entity';
 import { Repository } from 'typeorm';
 import { OwnerService } from '../owner/owner.service';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class PropertyService {
@@ -24,8 +25,41 @@ export class PropertyService {
     return await this.propertyRepository.save(otherData);
   }
 
-  async findAll() {
-    return await this.propertyRepository.find();
+  async findAll(query: PaginationDto) {
+    const limit = query.limit?? 10;
+    const page = query.page?? 1;
+    const skipData = (page - 1) * limit;
+
+    const [properties, total] = await this.propertyRepository.findAndCount({
+      skip: skipData,
+      take: limit,
+    });
+
+    const lastPage = Math.ceil(total / limit) == 0 ? 1 : Math.ceil(total / limit); 
+    
+    if(page > lastPage) throw new HttpException('Page Not Found', HttpStatus.NOT_FOUND);
+
+    return {data: properties, total, page, lastPage}
+  }
+
+  async findAllByOwnerId(id: string, query: PaginationDto) {
+    const limit = query.limit?? 10;
+    const page = query.page?? 1;
+    const skipData = (page - 1) * limit;
+
+    const [properties, total] = await this.propertyRepository.findAndCount({
+      skip: skipData,
+      take: limit,
+      where:{
+        owner: {id}
+      }
+    });
+
+    const lastPage = Math.ceil(total / limit) == 0 ? 1 : Math.ceil(total / limit); 
+    
+    if(page > lastPage) throw new HttpException('Page Not Found', HttpStatus.NOT_FOUND);
+
+    return {data: properties, total, page, lastPage}
   }
 
   async findOne(id: string): Promise<Property> {
