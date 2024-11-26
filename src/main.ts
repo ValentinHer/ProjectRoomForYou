@@ -9,7 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.enableCors({origin: "*"});
+  app.enableCors({origin: ["http://localhost:3000", "http://localhost:4000"], credentials: true});
 
   const config = new DocumentBuilder()
   .setTitle('RoomForYou')
@@ -19,7 +19,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 4000);
 }
 
 bootstrap();
