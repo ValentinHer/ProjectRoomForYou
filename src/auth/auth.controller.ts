@@ -13,7 +13,7 @@ export class AuthController {
     const {access_token, ...otherData} = await this.authService.singIn(signInDto);
 
     res.cookie('token', access_token, {httpOnly: true});
-    res.status(200).json({data: otherData});
+    res.status(200).json(otherData);
   }
 
   @Post('logout')
