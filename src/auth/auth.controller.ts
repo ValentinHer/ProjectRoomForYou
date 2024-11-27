@@ -12,7 +12,7 @@ export class AuthController {
   async login(@Body() signInDto: SignInDto, @Res() res: Response){
     const {access_token, ...otherData} = await this.authService.singIn(signInDto);
 
-    res.cookie('token', access_token, {httpOnly: true, secure: true});
+    res.cookie('token', access_token, {httpOnly: true, secure: true, sameSite: 'none'});
     res.status(200).json(otherData);
   }
 
