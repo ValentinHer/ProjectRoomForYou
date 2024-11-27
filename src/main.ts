@@ -9,7 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.enableCors({origin: ["http://localhost:3000", "http://localhost:4000"], credentials: true,});
+  app.enableCors({origin: ["http://localhost:3000", "http://localhost:4000"], credentials: true});
 
   const config = new DocumentBuilder()
   .setTitle('RoomForYou')
