@@ -14,7 +14,7 @@ export class PropertyService {
   async create(createPropertyDto: CreatePropertyDto) {
     const{ownerId, ...otherData} = createPropertyDto;
 
-    const owner = await this.ownerService.findOne(ownerId);
+    const owner = await this.ownerService.findOneByUserId(ownerId);
 
     const propertyFound = await this.propertyRepository.findOne({
       where: {title: createPropertyDto.title}
