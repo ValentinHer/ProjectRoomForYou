@@ -22,7 +22,7 @@ export class PropertyService {
 
     if(propertyFound) throw new ConflictException(`Property with title ${createPropertyDto.title} already exist`);
 
-    return await this.propertyRepository.save(otherData);
+    return await this.propertyRepository.save({owner, ...otherData});
   }
 
   async findAll(query: PaginationDto) {
