@@ -16,7 +16,7 @@ export class FileController {
   @ApiBody({description: 'Data to send in request body', type: CreateFileDto})
   @ApiResponse({status: 200, description: 'Return user created'})
   @ApiResponse({status: 409, description: 'Conflict'})
-  @Roles(['admin, propietario'])
+  @Roles(['admin', 'propietario'])
   @UseGuards(JwtAuthGuard, RolesGuard)
   @UseInterceptors(FilesInterceptor('files'))
   async create( @UploadedFiles() files: Array<Express.Multer.File>, @Body() createFileDto: CreateFileDto) {
