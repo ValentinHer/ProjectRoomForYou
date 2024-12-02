@@ -22,9 +22,9 @@ export class FileService {
               private propertyService: PropertyService){}
 
   async create(files: Array<Express.Multer.File>, createFileDto: CreateFileDto) {
-    const {propertyid } = createFileDto;
+    const {propertyId } = createFileDto;
 
-    const propertyFound = await this.propertyService.findOne(propertyid);
+    const propertyFound = await this.propertyService.findOne(propertyId);
 
     if(!files) throw new BadRequestException(`Files don't provided`);
 
