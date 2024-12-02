@@ -49,7 +49,7 @@ export class FileService {
 
     for(let i=0; i < files.length; i++){
       const fileExtension = files[i].originalname.split('.');
-      const key = `${propertyFound.title}_${i+1}.${fileExtension[files.length - 1]}`;
+      const key = `${propertyFound.title}_${i+1}.${fileExtension[fileExtension.length - 1]}`;
 
       await this.fileRepository.save({name: key, property: propertyFound});
 
