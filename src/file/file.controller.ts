@@ -22,7 +22,7 @@ export class FileController {
   @Roles(['admin', 'propietario'])
   @UseGuards(JwtAuthGuard, RolesGuard)
   @UseInterceptors(FilesInterceptor('files'))
-  async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body('CreateFileDto', new ParseJsonPipe()) createFileDto: CreateFileDto) {
+  async create(@UploadedFiles() files: Array<Express.Multer.File>, @Body('CreateFileDto', new ParseJsonPipe()) createFileDto) {
     await this.fileService.create(files, createFileDto);
   }
 
