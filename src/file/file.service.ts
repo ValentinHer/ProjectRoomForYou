@@ -29,38 +29,38 @@ export class FileService {
     if(!files) throw new BadRequestException(`Files don't provided`);
 
 
-    files.forEach(async (file) => {
-      let i = 1;
-      const fileExtension = file.originalname.split('.');
-      const key = `${propertyFound.title}_${i}.${fileExtension[fileExtension.length - 1]}`;
-
-      await this.fileRepository.save({name: key, property: propertyFound});
-
-      await this.client.send(
-        new PutObjectCommand({
-          Bucket: process.env.AWS_BUCKET_NAME,
-          Body: file.buffer,
-          Key: key
-        })
-      )
-
-      i++;
-    })
-
-    // for(let i=0; i < files.length; i++){
-    //   const fileExtension = files[i].originalname.split('.');
-    //   const key = `${propertyFound.title}_${i+1}.${fileExtension[files.length - 1]}`;
+    // files.forEach(async (file) => {
+    //   let i = 1;
+    //   const fileExtension = file.originalname.split('.');
+    //   const key = `${propertyFound.title}_${i}.${fileExtension[fileExtension.length - 1]}`;
 
     //   await this.fileRepository.save({name: key, property: propertyFound});
 
     //   await this.client.send(
     //     new PutObjectCommand({
     //       Bucket: process.env.AWS_BUCKET_NAME,
-    //       Body: files[i].buffer,
+    //       Body: file.buffer,
     //       Key: key
     //     })
-    //   );
-    // }
+    //   )
+
+    //   i++;
+    // })
+
+    for(let i=0; i < files.length; i++){
+      const fileExtension = files[i].originalname.split('.');
+      const key = `${propertyFound.title}_${i+1}.${fileExtension[files.length - 1]}`;
+
+      await this.fileRepository.save({name: key, property: propertyFound});
+
+      await this.client.send(
+        new PutObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Body: files[i].buffer,
+          Key: key
+        })
+      );
+    }
 
     throw new HttpException('Images uploades successfully', HttpStatus.OK);
   }
