@@ -61,8 +61,8 @@ export class UserService implements OnModuleInit {
   }
 
   async findAll(query: PaginationDto) {
-    const limit = query.limit?? 10;
-    const page = query.page?? 1;
+    const limit = query.limit;
+    const page = query.page;
     const skipData = (page - 1) * limit;
 
     const [users, total] = await this.userRepository.findAndCount({
