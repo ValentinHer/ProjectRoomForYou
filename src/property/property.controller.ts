@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, ParseIntPipe } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
@@ -49,7 +49,7 @@ export class PropertyController {
   @ApiResponse({status: 200, description: 'Return array propierties/array empty'})
   @Roles(['propietario', 'admin'])
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async findAllByOwerId(@Param('id') id: string, @Query() query: PaginationDto) {
+  async findAllByOwerId(@Param('id') id: string, @Query(ParseIntPipe) query: PaginationDto) {
     return await this.propertyService.findAllByOwnerId(id, query);
   }
 

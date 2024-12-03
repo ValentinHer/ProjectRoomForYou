@@ -43,8 +43,8 @@ export class PropertyService {
   }
 
   async findAllByOwnerId(id: string, query: PaginationDto) {
-    const limit = query.limit?? 10;
-    const page = query.page?? 1;
+    const limit = query.limit;
+    const page = query.page;
     const skipData = (page - 1) * limit;
 
     const [properties, total] = await this.propertyRepository.findAndCount({
