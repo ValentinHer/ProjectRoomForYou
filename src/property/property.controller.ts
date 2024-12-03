@@ -49,7 +49,7 @@ export class PropertyController {
   @ApiResponse({status: 200, description: 'Return array propierties/array empty'})
   @Roles(['propietario', 'admin'])
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async findAllByOwerId(@Param('id') id: string, @Query(ParseIntPipe) query: PaginationDto) {
+  async findAllByOwerId(@Param('id') id: string, @Query() query: PaginationDto) {
     return await this.propertyService.findAllByOwnerId(id, query);
   }
 
