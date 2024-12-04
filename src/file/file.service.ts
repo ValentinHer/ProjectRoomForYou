@@ -13,45 +13,26 @@ export class FileService {
   client = new S3Client({
     region: process.env.AWS_BUCKET_REGION,
     credentials: {
-        accessKeyId: process.env.AWS_PUBLIC_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_PUBLIC_ACCESS_SECRET
+      accessKeyId: process.env.AWS_PUBLIC_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_PUBLIC_ACCESS_SECRET
     }
   })
 
-  constructor(@InjectRepository(File) private fileRepository: Repository<File>, 
-              private propertyService: PropertyService){}
+  constructor(@InjectRepository(File) private fileRepository: Repository<File>,
+    private propertyService: PropertyService) { }
 
   async create(files: Array<Express.Multer.File>, createFileDto: CreateFileDto) {
-    const {propertyId } = createFileDto;
+    const { propertyId } = createFileDto;
 
     const propertyFound = await this.propertyService.findOne(propertyId);
 
-    if(!files) throw new BadRequestException(`Files don't provided`);
+    if (!files) throw new BadRequestException(`Files don't provided`);
 
-
-    // files.forEach(async (file) => {
-    //   let i = 1;
-    //   const fileExtension = file.originalname.split('.');
-    //   const key = `${propertyFound.title}_${i}.${fileExtension[fileExtension.length - 1]}`;
-
-    //   await this.fileRepository.save({name: key, property: propertyFound});
-
-    //   await this.client.send(
-    //     new PutObjectCommand({
-    //       Bucket: process.env.AWS_BUCKET_NAME,
-    //       Body: file.buffer,
-    //       Key: key
-    //     })
-    //   )
-
-    //   i++;
-    // })
-
-    for(let i=0; i < files.length; i++){
+    for (let i = 0; i < files.length; i++) {
       const fileExtension = files[i].originalname.split('.');
-      const key = `${propertyFound.title}_${i+1}.${fileExtension[fileExtension.length - 1]}`;
+      const key = `${propertyFound.title}_${i + 1}.${fileExtension[fileExtension.length - 1]}`;
 
-      await this.fileRepository.save({name: key, property: propertyFound});
+      await this.fileRepository.save({ name: key, property: propertyFound });
 
       await this.client.send(
         new PutObjectCommand({
@@ -66,24 +47,27 @@ export class FileService {
   }
 
   async findAll(id: string) {
+    console.log(id)
     const filesToProperty = await this.fileRepository.find({
-      where: {property: {id: id} }
+      where: { property: { id: id } }
     })
 
-    if(!filesToProperty) throw new NotFoundException(`Files don't found to property`);
+    console.log(filesToProperty);
 
-    const urls: string[] = [];
-    
-    filesToProperty.forEach(async (file) => {
+    if (filesToProperty.length == 0) throw new NotFoundException(`Files don't found to property`);
+
+    let urls: string[] = [];
+
+    for (let i = 0; i < filesToProperty.length; i++) {
       const command = new GetObjectCommand({
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: file.name
+        Key: filesToProperty[i].name
       })
 
       const url = await getSignedUrl(this.client, command);
 
       urls.push(url);
-    })
+    }
 
     return urls;
   }
