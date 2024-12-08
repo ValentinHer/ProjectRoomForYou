@@ -33,7 +33,7 @@ export class OwnerController {
   @ApiParam({name: 'id', type: 'Owner id', example: '60e92b59-6a6d-4f8b-baca-c9fde9d1313a'})
   @ApiResponse({status: 200, description: 'Return owner found'})
   @ApiResponse({status: 404, description: 'Not Found'})
-  @Roles(['admin'])
+  @Roles(['admin', 'cliente', 'propietario'])
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findOne(@Param('id') id: string) {
     return await this.ownerService.findOne(id);
