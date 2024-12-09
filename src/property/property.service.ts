@@ -64,7 +64,8 @@ export class PropertyService {
 
   async findOne(id: string): Promise<Property> {
     const propertyFound = await this.propertyRepository.findOne({
-      where: {id}
+      where: {id},
+      relations: {owner: true}
     })
 
     if(!propertyFound) throw new NotFoundException("Property Not Found");
