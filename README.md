@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Sistema de gestión de citas para visitas a los inmuebles disponibles en una región determinada. La plataforma permite a los usuarios registrarse como arrendadores o clientes, facilitando la adminitración relacionada con los inmuebles.
+Sistema de gestión de citas para visitas a los inmuebles disponibles en una región determinada. La plataforma permite a los usuarios registrarse como arrendadores o clientes, facilitando la adminitración relacionada con los inmuebles. Revisa el [FrontEnd del proyecto](https://github.com/ValentinHer/frontend-room-for-you).
 
 ## Características 🚀
 
